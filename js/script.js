@@ -29,43 +29,47 @@ let suggestions = [
 
 let $ = document
 
+const searchElementWrapper = $.querySelector('.search-input')
 const inputElem = $.querySelector('#inputElement')
 const ulElem = $.querySelector('.autocom-box')
-const searchInputElem = $.querySelector('.search-input')
 
-inputElem.focus() // !
+inputElem.addEventListener('keyup', function (event) {
 
-inputElem.addEventListener('keyup', function () {
-    let searchInputValue = inputElem.value
+    inputValue = inputElem.value
 
-    if (searchInputValue) {
-        searchInputElem.classList.add('active')
+    if (inputValue) {
+        searchElementWrapper.classList.add('active')
 
-        let mainWord = suggestions.filter(function (words) {
-            return words.toLowerCase().includes(searchInputValue.toLowerCase())
+        let mainWord = suggestions.filter(function (suggestion) {
+            return suggestion.toLowerCase().includes(inputValue.toLowerCase())
         })
 
-        suggestionGenerator(mainWord)
+        resultGenerator(mainWord)
+
 
     } else {
-        searchInputElem.classList.remove('active')
+        searchElementWrapper.classList.remove('active')
     }
 })
 
-function suggestionGenerator(words) {
+function resultGenerator(words) {
     ulElem.innerHTML = ''
 
     if (words.length) {
+
         words.forEach(function (word) {
             ulElem.innerHTML += '<li>' + word + '</li>'
 
-            let liElems = ulElem.querySelectorAll('li')
+            liResultsSearch = ulElem.querySelectorAll('li')
 
-            liElems.forEach(function (wordsElem) {
-                wordsElem.addEventListener("click", function (event) {
-                    inputElem.value = event.target.textContent
+            liResultsSearch.forEach(function (wordsElem) {
 
-                    searchInputElem.classList.remove('active')
+                wordsElem.addEventListener('click', function (wordElem) {
+                    ulElem.innerHTML = ''
+
+                    inputElem.value = wordElem.target.textContent
+
+                    searchElementWrapper.classList.remove('active')
                 })
             })
         })
